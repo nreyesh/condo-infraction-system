@@ -1,0 +1,42 @@
+name: 'Terraform CI/CD'
+
+on:
+  push:
+    branches: [ "main" ] # run when we push to the main branch
+
+jobs:
+  terraform:
+    name: 'Terraform Apply'
+    runs-on: ubuntu-latest
+
+    # This section allows GitHub to request the "ID Token" from Google
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+      # Check out your code from GitHub
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Authenticate with Google Cloud using Workload Identity (The Bridge)
+      - name: Google Auth
+        uses: 'google-github-actions/auth@v2'
+        with:
+          project_id: 'condo-infraction-system'
+          workload_identity_provider: 'projects/756843377082/locations/global/workloadIdentityPools/github-pool/providers/github-provider'
+          service_account: 'terraform-cicd@condo-infraction-system.iam.gserviceaccount.com'
+
+      # Setup Terraform on the GitHub Runner
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      # Initialize Terraform (Connect to your GCS State Bucket)
+      - name: Terraform Init
+        run: terraform init
+        working-directory: ./terraform
+
+      # Plan and Apply (The "Construction" Phase)
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
+        working-directory: ./terraform
