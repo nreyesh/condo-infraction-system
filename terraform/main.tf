@@ -55,3 +55,41 @@ resource "google_service_account_iam_member" "github_sa_user" {
   role               = "roles/iam.serviceAccountTokenCreator"
   member             = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.github_pool.name}/attribute.repository/nreyesh/condo-infraction-system"
 }
+
+
+## --------- Cloud SQL --------- ##
+# Generate a random password (so you don't have to invent one)
+resource "random_password" "db_password" {
+  length  = 16
+  special = false
+}
+
+# The Cloud SQL Instance (The "Server")
+resource "google_sql_database_instance" "infraction_db_instance" {
+  name             = "condo-db-instance"
+  database_version = "POSTGRES_15"
+  region           = var.region
+
+  settings {
+    tier = "db-f1-micro" # Smallest tier to keep costs low
+    
+    ip_configuration {
+      ipv4_enabled = true # Allows connection for local testing
+    }
+  }
+
+  deletion_protection = false # Set to true for production!
+}
+
+# The actual Database (The "Folder" inside the server)
+resource "google_sql_database" "infraction_db" {
+  name     = "infractions"
+  instance = google_sql_database_instance.infraction_db_instance.name
+}
+
+# The Database User
+resource "google_sql_user" "db_user" {
+  name     = "ai_backend_user"
+  instance = google_sql_database_instance.infraction_db_instance.name
+  password = random_password.db_password.result
+}
