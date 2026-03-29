@@ -17,3 +17,10 @@ resource "google_project_iam_member" "app_sql_client" {
   role    = "roles/cloudsql.client"
   member  = "serviceAccount:${google_service_account.app_sa.email}"
 }
+
+# Allow the App SA to use the Cloud SQL Instance
+resource "google_project_iam_member" "app_sql_instance_user" {
+  project = var.project_id
+  role    = "roles/cloudsql.instanceUser" # Specifically for IAM-based login/proxy
+  member  = "serviceAccount:${google_service_account.app_sa.email}"
+}

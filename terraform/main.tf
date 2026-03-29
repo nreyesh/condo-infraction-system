@@ -95,8 +95,17 @@ resource "google_sql_user" "db_user" {
   password = random_password.db_password.result
 }
 
+# Enable the Cloud SQL Admin API (Required for the Proxy)
+resource "google_project_service" "sqladmin" {
+  project = var.project_id
+  service = "sqladmin.googleapis.com"
+  disable_on_destroy = false
+}
+
 ## --------- Secret Manager --------- ##
 resource "google_project_service" "secretmanager" {
   service            = "secretmanager.googleapis.com"
   disable_on_destroy = false
 }
+
+
