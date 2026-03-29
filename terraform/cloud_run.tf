@@ -43,7 +43,8 @@ resource "google_cloud_run_v2_service" "ai_backend" {
   }
 
   depends_on = [
-    google_project_service.sqladmin,
+    google_project_service.project_services["sqladmin.googleapis.com"],
+    google_project_service.project_services["run.googleapis.com"],
     google_secret_manager_secret_iam_member.app_secret_accessor
   ]
 }

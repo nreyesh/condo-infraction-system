@@ -19,6 +19,13 @@ resource "google_project_iam_member" "terraform_editor" {
   member  = "serviceAccount:${google_service_account.terraform_cicd.email}"
 }
 
+# Specifically allow it to manage IAM policies (required for project-level roles)
+resource "google_project_iam_member" "terraform_iam_admin" {
+  project = var.project_id
+  role    = "roles/resourcemanager.projectIamAdmin"
+  member  = "serviceAccount:${google_service_account.terraform_cicd.email}"
+}
+
 # Give it access to the State Bucket specifically
 resource "google_storage_bucket_iam_member" "state_admin" {
   bucket = var.state_bucket_name
@@ -95,15 +102,20 @@ resource "google_sql_user" "db_user" {
   password = random_password.db_password.result
 }
 
-# Enable the Cloud SQL Admin API (Required for the Proxy)
-resource "google_project_service" "sqladmin" {
-  project = var.project_id
-  service = "sqladmin.googleapis.com"
-  disable_on_destroy = false
+## --------- Project Services (APIs) --------- ##
+locals {
+  services = [
+    "sqladmin.googleapis.com",
+    "run.googleapis.com",
+    "secretmanager.googleapis.com",
+    "iam.googleapis.com",
+    "cloudresourcemanager.googleapis.com"
+  ]
 }
 
-## --------- Secret Manager --------- ##
-resource "google_project_service" "secretmanager" {
-  service            = "secretmanager.googleapis.com"
+resource "google_project_service" "project_services" {
+  for_each           = toset(local.services)
+  project            = var.project_id
+  service            = each.key
   disable_on_destroy = false
 }
