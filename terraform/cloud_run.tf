@@ -45,7 +45,9 @@ resource "google_cloud_run_v2_service" "ai_backend" {
   depends_on = [
     google_project_service.project_services["sqladmin.googleapis.com"],
     google_project_service.project_services["run.googleapis.com"],
-    google_secret_manager_secret_iam_member.app_secret_accessor
+    google_secret_manager_secret_iam_member.app_secret_accessor,
+    google_project_iam_member.app_sql_client,
+    google_project_iam_member.app_sql_instance_user
   ]
 }
 
@@ -57,4 +59,8 @@ resource "google_cloud_run_v2_service_iam_member" "authorized_access" {
   name     = google_cloud_run_v2_service.ai_backend.name
   role     = "roles/run.invoker"
   member   = each.value
+
+  depends_on = [
+    google_project_iam_member.terraform_iam_admin
+  ]
 }
