@@ -20,11 +20,11 @@ resource "google_project_iam_member" "terraform_editor" {
 }
 
 # Grant the CI/CD Service Account permission to manage secrets
-resource "google_project_iam_member" "terraform_secret_admin" {
-  project = var.project_id
-  role    = "roles/secretmanager.admin" 
-  member  = "serviceAccount:${google_service_account.terraform_cicd.email}"
-}
+#resource "google_project_iam_member" "terraform_secret_admin" {
+#  project = var.project_id
+#  role    = "roles/secretmanager.admin" 
+#  member  = "serviceAccount:${google_service_account.terraform_cicd.email}"
+#}
 
 # Give it access to the State Bucket specifically
 resource "google_storage_bucket_iam_member" "state_admin" {
