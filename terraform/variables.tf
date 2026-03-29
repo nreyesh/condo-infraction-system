@@ -12,3 +12,9 @@ variable "state_bucket_name" {
   type    = string
   default = "condo-tf-state" # The one that actually exists
 }
+
+variable "authorized_emails" {
+  type    = list(string)
+  default = ["user:nereyes@miaundes.cl", "nico.uk.cl@gmail.com"]
+  description = "List of users allowed to access the Cloud Run service"
+}
