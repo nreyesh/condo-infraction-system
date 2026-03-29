@@ -93,3 +93,9 @@ resource "google_sql_user" "db_user" {
   instance = google_sql_database_instance.infraction_db_instance.name
   password = random_password.db_password.result
 }
+
+## --------- Secret Manager --------- ##
+resource "google_project_service" "secretmanager" {
+  service            = "secretmanager.googleapis.com"
+  disable_on_destroy = false
+}
