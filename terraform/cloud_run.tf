@@ -61,8 +61,6 @@ resource "google_cloud_run_v2_service_iam_member" "authorized_access" {
   member   = each.value
 
   depends_on = [
-    google_project_iam_member.terraform_iam_admin,
-    google_project_iam_member.terraform_run_admin
-    time_sleep.wait_for_iam
+    time_sleep.wait_for_iam,
   ]
 }

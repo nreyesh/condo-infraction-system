@@ -33,6 +33,18 @@ resource "google_project_iam_member" "terraform_run_admin" {
   member  = "serviceAccount:${google_service_account.terraform_cicd.email}"
 }
 
+# Wait for IAM permissions to propagate
+resource "time_sleep" "wait_for_iam" {
+  create_duration = "30s"
+
+  depends_on = [
+    google_project_iam_member.terraform_editor,
+    google_project_iam_member.terraform_iam_admin,
+    google_project_iam_member.terraform_run_admin,
+    google_project_service.project_services
+  ]
+}
+
 # Give it access to the State Bucket specifically
 resource "google_storage_bucket_iam_member" "state_admin" {
   bucket = var.state_bucket_name

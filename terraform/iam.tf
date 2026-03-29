@@ -11,7 +11,7 @@ resource "google_secret_manager_secret_iam_member" "app_secret_accessor" {
   member    = "serviceAccount:${google_service_account.app_sa.email}"
 
   depends_on = [
-    google_project_iam_member.terraform_iam_admin
+    time_sleep.wait_for_iam
   ]
 }
 
@@ -22,7 +22,7 @@ resource "google_project_iam_member" "app_sql_client" {
   member  = "serviceAccount:${google_service_account.app_sa.email}"
 
   depends_on = [
-    google_project_iam_member.terraform_iam_admin
+    time_sleep.wait_for_iam
   ]
 }
 
@@ -33,6 +33,6 @@ resource "google_project_iam_member" "app_sql_instance_user" {
   member  = "serviceAccount:${google_service_account.app_sa.email}"
 
   depends_on = [
-    google_project_iam_member.terraform_iam_admin
+    time_sleep.wait_for_iam
   ]
 }
