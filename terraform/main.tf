@@ -26,6 +26,13 @@ resource "google_project_iam_member" "terraform_iam_admin" {
   member  = "serviceAccount:${google_service_account.terraform_cicd.email}"
 }
 
+# Allow it to manage Cloud Run (required for setting resource-level IAM policies)
+resource "google_project_iam_member" "terraform_run_admin" {
+  project = var.project_id
+  role    = "roles/run.admin"
+  member  = "serviceAccount:${google_service_account.terraform_cicd.email}"
+}
+
 # Give it access to the State Bucket specifically
 resource "google_storage_bucket_iam_member" "state_admin" {
   bucket = var.state_bucket_name
