@@ -62,5 +62,6 @@ resource "google_cloud_run_v2_service_iam_member" "authorized_access" {
 
   depends_on = [
     time_sleep.wait_for_iam,
+    google_cloud_run_v2_service.ai_backend
   ]
 }
