@@ -13,7 +13,7 @@ resource "google_secret_manager_secret_iam_member" "app_secret_accessor" {
 
 # Give the App SA permission to connect to Cloud SQL
 resource "google_project_iam_member" "app_sql_client" {
-  project = "condo-infraction-system"
+  project = var.project_id
   role    = "roles/cloudsql.client"
   member  = "serviceAccount:${google_service_account.app_sa.email}"
 }
