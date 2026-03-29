@@ -1,6 +1,6 @@
 # Secret Container
 resource "google_secret_manager_secret" "db_password_secret" {
-  secret_id = "db-password" # The name you'll see in the console
+  secret_id = "condo-infraction-system-db-password" # The name you'll see in the console
 
   replication {
     auto {} # Let Google handle backing this up across regions
