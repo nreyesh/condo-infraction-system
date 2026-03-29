@@ -5,7 +5,8 @@ resource "google_storage_bucket" "evidence_bucket" {
   public_access_prevention = "enforced"
 }
 
-# Create the Service Account
+## --------- Service Account --------- ##
+# Create the SA
 resource "google_service_account" "terraform_cicd" {
   account_id   = "terraform-cicd"
   display_name = "Terraform CI/CD Service Account"
@@ -15,6 +16,13 @@ resource "google_service_account" "terraform_cicd" {
 resource "google_project_iam_member" "terraform_editor" {
   project = var.project_id
   role    = "roles/editor"
+  member  = "serviceAccount:${google_service_account.terraform_cicd.email}"
+}
+
+# Grant the CI/CD Service Account permission to manage secrets
+resource "google_project_iam_member" "terraform_secret_admin" {
+  project = var.project_id
+  role    = "roles/secretmanager.admin" 
   member  = "serviceAccount:${google_service_account.terraform_cicd.email}"
 }
 
