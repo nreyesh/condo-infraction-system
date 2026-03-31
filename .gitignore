@@ -15,3 +15,6 @@ crash.*
 
 # Ignore provider binaries
 terraform-provider-*
+
+.venv
+.env

@@ -1,0 +1,9 @@
+gcloud config configurations activate personal/work
+
+gcloud auth list
+
+gcloud auth login
+
+gcloud config set project YOUR_PROJECT_NAME
+
+gcloud auth application-default login
