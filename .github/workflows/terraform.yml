@@ -23,9 +23,9 @@ jobs:
       - name: Google Auth
         uses: 'google-github-actions/auth@v2'
         with:
-          project_id: 'condo-infraction-system'
-          workload_identity_provider: 'projects/756843377082/locations/global/workloadIdentityPools/github-pool/providers/github-provider'
-          service_account: 'terraform-cicd@condo-infraction-system.iam.gserviceaccount.com'
+          project_id: 'condo-infraction-system-492221'
+          workload_identity_provider: 'projects/1090801247281/locations/global/workloadIdentityPools/github-pool/providers/github-provider'
+          service_account: 'terraform-cicd@condo-infraction-system-492221.iam.gserviceaccount.com'
 
       # Setup Terraform on the GitHub Runner
       - name: Setup Terraform
