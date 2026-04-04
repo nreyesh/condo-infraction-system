@@ -18,3 +18,11 @@ terraform-provider-*
 
 .venv
 .env
+
+# Python compilation files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# macOS system files
+.DS_Store

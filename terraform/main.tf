@@ -26,6 +26,13 @@ resource "google_project_iam_member" "terraform_iam_admin" {
   member  = "serviceAccount:${google_service_account.terraform_cicd.email}"
 }
 
+# Allow it to manage Secret Manager
+resource "google_project_iam_member" "terraform_secret_admin" {
+  project = var.project_id
+  role    = "roles/secretmanager.admin"
+  member  = "serviceAccount:${google_service_account.terraform_cicd.email}"
+}
+
 # Allow it to manage Cloud Run (required for setting resource-level IAM policies)
 resource "google_project_iam_member" "terraform_run_admin" {
   project = var.project_id
@@ -40,6 +47,7 @@ resource "time_sleep" "wait_for_iam" {
   depends_on = [
     google_project_iam_member.terraform_editor,
     google_project_iam_member.terraform_iam_admin,
+    google_project_iam_member.terraform_secret_admin,
     google_project_iam_member.terraform_run_admin,
     google_project_service.project_services
   ]
@@ -106,6 +114,10 @@ resource "google_sql_database_instance" "infraction_db_instance" {
   }
 
   deletion_protection = false # Set to true for production!
+
+  depends_on = [
+    google_project_service.project_services
+  ]
 }
 
 # The actual Database (The "Folder" inside the server)
