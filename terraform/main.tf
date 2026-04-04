@@ -48,7 +48,7 @@ resource "time_sleep" "wait_for_iam" {
 # Give it access to the State Bucket specifically
 resource "google_storage_bucket_iam_member" "state_admin" {
   bucket = var.state_bucket_name
-  role   = "roles/storage.objectAdmin"
+  role   = "roles/storage.admin"
   member = "serviceAccount:${google_service_account.terraform_cicd.email}"
 }
 
