@@ -10,7 +10,7 @@ variable "region" {
 
 variable "state_bucket_name" {
   type    = string
-  default = "condo-tf-state" # The one that actually exists
+  default = "condo-infraction-system-tf-state"
 }
 
 variable "authorized_emails" {

@@ -3,7 +3,7 @@ terraform {
 
   # This is the "Shared Memory" link
   backend "gcs" {
-    bucket  = "condo-tf-state"
+    bucket  = "condo-infraction-system-tf-state"
     prefix  = "terraform/state"
   }
 
