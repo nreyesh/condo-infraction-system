@@ -26,6 +26,13 @@ resource "google_project_iam_member" "terraform_iam_admin" {
   member  = "serviceAccount:${google_service_account.terraform_cicd.email}"
 }
 
+# Allow it to manage Service Account IAM policies (required for Workload Identity impersonation)
+resource "google_project_iam_member" "terraform_sa_admin" {
+  project = var.project_id
+  role    = "roles/iam.serviceAccountAdmin"
+  member  = "serviceAccount:${google_service_account.terraform_cicd.email}"
+}
+
 # Allow it to manage Secret Manager
 resource "google_project_iam_member" "terraform_secret_admin" {
   project = var.project_id
@@ -47,6 +54,7 @@ resource "time_sleep" "wait_for_iam" {
   depends_on = [
     google_project_iam_member.terraform_editor,
     google_project_iam_member.terraform_iam_admin,
+    google_project_iam_member.terraform_sa_admin,
     google_project_iam_member.terraform_secret_admin,
     google_project_iam_member.terraform_run_admin,
     google_project_service.project_services
