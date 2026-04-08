@@ -3,6 +3,27 @@ resource "google_storage_bucket" "evidence_bucket" {
   location      = var.region
   force_destroy = true 
   public_access_prevention = "enforced"
+
+  # Archiving Evidence after 2 years (Cost-effective for compliance)
+  lifecycle_rule {
+    condition {
+      age = 730 # 2 years
+    }
+    action {
+      type          = "SetStorageClass"
+      storage_class = "ARCHIVE"
+    }
+  }
+
+  # Automatic Deletion after 5 years (Right to be Forgotten)
+  lifecycle_rule {
+    condition {
+      age = 1825 # 5 years
+    }
+    action {
+      type = "Delete"
+    }
+  }
 }
 
 ## --------- Service Account --------- ##
@@ -114,8 +135,9 @@ resource "google_sql_database_instance" "infraction_db_instance" {
   region           = var.region
 
   settings {
-    tier = "db-f1-micro" # Smallest tier to keep costs low
-    
+    tier              = "db-f1-micro" # Smallest tier to keep costs low
+    availability_type = "ZONAL"       # Single Zone (Dev/Small-Prod) - Saves ~50% vs REGIONAL
+
     ip_configuration {
       ipv4_enabled = true # Allows connection for local testing
     }
