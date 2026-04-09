@@ -38,8 +38,8 @@ jobs:
 
       - name: 'Start Cloud SQL Auth Proxy'
         run: |
-          ./cloud-sql-proxy condo-infraction-system-492221:southamerica-west1:condo-db-instance --unix-socket /tmp/cloudsql &
-          sleep 5
+          ./cloud-sql-proxy condo-infraction-system-492221:southamerica-west1:condo-db-instance --port 5432 &
+          sleep 10
 
       - name: 'Set up Python'
         uses: actions/setup-python@v5
@@ -63,8 +63,8 @@ jobs:
           DB_USER: 'ai_backend_user'
           DB_PASS: ${{ steps.secrets.outputs.DB_PASS }}
           DB_NAME: 'infractions'
-          INSTANCE_CONNECTION_NAME: 'condo-infraction-system-492221:southamerica-west1:condo-db-instance'
-          DB_SOCKET_DIR: '/tmp/cloudsql'
+          DB_HOST: '127.0.0.1'
+          DB_PORT: '5432'
         run: |
           cd backend
           alembic upgrade head
